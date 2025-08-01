@@ -150,8 +150,14 @@ const Chat = () => {
       // Refresh messages to show user message immediately
       await fetchMessages();
 
-      // Simulate AI response (replace with actual AI integration)
-      const aiResponse = generateAIResponse(userMessage);
+      // Get AI response from edge function
+      const { data: aiData, error: aiError } = await supabase.functions.invoke('ai-chat', {
+        body: { message: userMessage }
+      });
+
+      if (aiError) throw aiError;
+
+      const aiResponse = aiData.response;
       
       const { error: aiMessageError } = await supabase
         .from('chat_messages')
@@ -189,19 +195,6 @@ const Chat = () => {
     }
   };
 
-  const generateAIResponse = (userMessage: string): string => {
-    // Simple response generation - replace with actual AI integration
-    const responses = [
-      "That's an interesting question! Let me help you understand this concept better.",
-      "I can definitely help you with that. Here's what you need to know:",
-      "Great question! This is a fundamental concept in learning.",
-      "Let me break this down for you step by step:",
-      "I understand your confusion. Let's clarify this together:",
-    ];
-    
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-    return `${randomResponse} Based on your question about "${userMessage.substring(0, 30)}...", I would recommend focusing on the core principles and practicing with real examples.`;
-  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
