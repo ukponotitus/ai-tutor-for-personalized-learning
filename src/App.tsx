@@ -6,9 +6,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Courses from "./pages/Courses";
+import Chat from "./pages/Chat";
+import Wishlist from "./pages/Wishlist";
+import Resources from "./pages/Resources";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Layout from "./components/Layout";
 
 const queryClient = new QueryClient();
 
@@ -23,9 +27,32 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={
             <ProtectedRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/courses" element={
+            <ProtectedRoute>
+              <Courses />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          } />
+          <Route path="/wishlist" element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          } />
+          <Route path="/resources" element={
+            <ProtectedRoute>
+              <Resources />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
