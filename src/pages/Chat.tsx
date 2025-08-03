@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, MessageSquare, Plus } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import Layout from '@/components/Layout';
+import DashboardLayout from '@/components/DashboardLayout';
 
 interface Message {
   id: string;
@@ -204,7 +204,7 @@ const Chat = () => {
   };
 
   return (
-    <Layout>
+    <DashboardLayout>
       <div className="container mx-auto py-8 h-[calc(100vh-8rem)]">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-full">
           {/* Sessions Sidebar */}
@@ -332,7 +332,7 @@ const Chat = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </DashboardLayout>
   );
 };
 

@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ExternalLink, Search, FileText, Video, Download, BookOpen } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import Layout from '@/components/Layout';
+import DashboardLayout from '@/components/DashboardLayout';
 
 interface Resource {
   id: string;
@@ -85,17 +85,17 @@ const Resources = () => {
   const categories = [...new Set(resources.map(resource => resource.category).filter(Boolean))];
 
   if (loading) {
-    return (
-      <Layout>
+  return (
+    <DashboardLayout>
         <div className="container mx-auto py-8">
           <div className="text-center">Loading resources...</div>
-        </div>
-      </Layout>
-    );
+      </div>
+    </DashboardLayout>
+  );
   }
 
   return (
-    <Layout>
+    <DashboardLayout>
       <div className="container mx-auto py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">Learning Resources</h1>
@@ -241,7 +241,7 @@ const Resources = () => {
           </div>
         )}
       </div>
-    </Layout>
+    </DashboardLayout>
   );
 };
 

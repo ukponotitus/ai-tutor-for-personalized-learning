@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import DashboardLayout from '@/components/DashboardLayout';
 import { 
   BookOpen, 
   MessageSquare, 
@@ -119,7 +120,7 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="container py-8">
+      <DashboardLayout>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <Card key={i}>
@@ -132,12 +133,13 @@ const Dashboard = () => {
             </Card>
           ))}
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="container py-8 space-y-8">
+    <DashboardLayout>
+      <div className="space-y-8">
       {/* Welcome Section */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">
@@ -333,7 +335,8 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       )}
-    </div>
+      </div>
+    </DashboardLayout>
   );
 };
 

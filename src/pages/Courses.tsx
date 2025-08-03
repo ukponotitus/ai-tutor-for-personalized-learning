@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Heart, Clock, User, Search } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import Layout from '@/components/Layout';
+import DashboardLayout from '@/components/DashboardLayout';
 
 interface Course {
   id: string;
@@ -169,17 +169,17 @@ const Courses = () => {
   const difficulties = [...new Set(courses.map(course => course.difficulty_level).filter(Boolean))];
 
   if (loading) {
-    return (
-      <Layout>
+  return (
+    <DashboardLayout>
         <div className="container mx-auto py-8">
           <div className="text-center">Loading courses...</div>
-        </div>
-      </Layout>
-    );
+      </div>
+    </DashboardLayout>
+  );
   }
 
   return (
-    <Layout>
+    <DashboardLayout>
       <div className="container mx-auto py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">Course Catalog</h1>
@@ -296,7 +296,7 @@ const Courses = () => {
           </div>
         )}
       </div>
-    </Layout>
+    </DashboardLayout>
   );
 };
 
