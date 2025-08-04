@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -282,8 +283,8 @@ const Courses = () => {
                 <div className="text-lg font-semibold">
                   {course.is_free ? 'Free' : `$${course.price}`}
                 </div>
-                <Button onClick={() => enrollInCourse(course.id)}>
-                  Enroll Now
+                <Button asChild>
+                  <Link to={`/courses/${course.id}`}>Start Learning</Link>
                 </Button>
               </CardFooter>
             </Card>
