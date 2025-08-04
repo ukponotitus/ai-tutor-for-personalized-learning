@@ -8,6 +8,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
+import CourseContent from "./pages/CourseContent";
+import QuizTaking from "./pages/QuizTaking";
 import Chat from "./pages/Chat";
 import Wishlist from "./pages/Wishlist";
 import Resources from "./pages/Resources";
@@ -38,7 +40,17 @@ const App = () => (
           } />
           <Route path="/courses/:courseId" element={
             <ProtectedRoute>
+              <CourseContent />
+            </ProtectedRoute>
+          } />
+          <Route path="/courses/:courseId/details" element={
+            <ProtectedRoute>
               <CourseDetail />
+            </ProtectedRoute>
+          } />
+          <Route path="/quiz/:quizId" element={
+            <ProtectedRoute>
+              <QuizTaking />
             </ProtectedRoute>
           } />
           <Route path="/chat" element={

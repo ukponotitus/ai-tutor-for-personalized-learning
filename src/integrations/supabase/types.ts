@@ -186,6 +186,48 @@ export type Database = {
         }
         Relationships: []
       }
+      quizzes: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          id: string
+          questions: Json
+          score: number | null
+          status: string
+          title: string
+          total_questions: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          id?: string
+          questions: Json
+          score?: number | null
+          status?: string
+          title: string
+          total_questions?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          id?: string
+          questions?: Json
+          score?: number | null
+          status?: string
+          title?: string
+          total_questions?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       resources: {
         Row: {
           category: string | null

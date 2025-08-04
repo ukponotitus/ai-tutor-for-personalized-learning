@@ -15,7 +15,8 @@ import {
   TrendingUp,
   Clock,
   Star,
-  Play
+  Play,
+  Award
 } from 'lucide-react';
 
 interface Course {
@@ -37,10 +38,20 @@ interface Enrollment {
   course: Course;
 }
 
+interface Quiz {
+  id: string;
+  title: string;
+  status: string;
+  score: number | null;
+  total_questions: number;
+  created_at: string;
+}
+
 const Dashboard = () => {
   const { user } = useAuth();
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [featuredCourses, setFeaturedCourses] = useState<Course[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -81,10 +92,27 @@ const Dashboard = () => {
       } finally {
         setLoading(false);
       }
-    };
+  };
+
+  const fetchQuizzes = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('quizzes')
+        .select('id, title, status, score, total_questions, created_at')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+
+      if (error) throw error;
+      setQuizzes(data || []);
+    } catch (error) {
+      console.error('Failed to fetch quizzes:', error);
+    }
+  };
 
     if (user) {
       fetchDashboardData();
+      fetchQuizzes();
     }
   }, [user]);
 
@@ -335,6 +363,52 @@ const Dashboard = () => {
           </CardContent>
         </Card>
       )}
+        
+        {/* Available Quizzes */}
+        {quizzes.length > 0 && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Award className="h-5 w-5" />
+                Your Quizzes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {quizzes.map((quiz) => (
+                  <Card key={quiz.id} className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between">
+                        <h4 className="font-medium text-sm">{quiz.title}</h4>
+                        <Badge variant={quiz.status === 'completed' ? 'default' : 'secondary'}>
+                          {quiz.status}
+                        </Badge>
+                      </div>
+                      
+                      <div className="text-xs text-muted-foreground">
+                        {quiz.total_questions} questions
+                        {quiz.score !== null && (
+                          <span className="ml-2">• Score: {quiz.score}%</span>
+                        )}
+                      </div>
+                      
+                      <Button 
+                        asChild 
+                        size="sm" 
+                        className="w-full"
+                        variant={quiz.status === 'completed' ? 'outline' : 'default'}
+                      >
+                        <Link to={`/quiz/${quiz.id}`}>
+                          {quiz.status === 'completed' ? 'Review Results' : 'Take Quiz'}
+                        </Link>
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </DashboardLayout>
   );
