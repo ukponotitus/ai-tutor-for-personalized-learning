@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import DashboardLayout from '@/components/DashboardLayout';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -19,7 +20,12 @@ import {
   MessageCircle,
   Play,
   FileText,
-  Award
+  Award,
+  ChevronDown,
+  ChevronRight,
+  Download,
+  FileIcon,
+  ExternalLink
 } from 'lucide-react';
 
 interface Course {
@@ -40,6 +46,15 @@ interface Enrollment {
   progress_percentage: number;
   enrolled_at: string;
   completed_at: string | null;
+}
+
+interface Resource {
+  id: number;
+  title: string;
+  type: 'PDF' | 'Link' | 'Document' | 'Video';
+  url: string;
+  size?: string;
+  description?: string;
 }
 
 // Mock course content structure
@@ -164,6 +179,39 @@ Now it's time to practice! Try working through these examples yourself, and feel
         }
       ]
     }
+  ],
+  resources: [
+    {
+      id: 1,
+      title: `${course.title} - Complete Guide`,
+      type: 'PDF' as const,
+      url: '#',
+      size: '2.3 MB',
+      description: 'Comprehensive guide covering all course topics'
+    },
+    {
+      id: 2,
+      title: 'Practice Exercises',
+      type: 'Document' as const,
+      url: '#',
+      size: '1.1 MB',
+      description: 'Hands-on exercises for each module'
+    },
+    {
+      id: 3,
+      title: 'Official Documentation',
+      type: 'Link' as const,
+      url: '#',
+      description: 'External resource for additional learning'
+    },
+    {
+      id: 4,
+      title: 'Video Tutorials Collection',
+      type: 'Video' as const,
+      url: '#',
+      size: '125 MB',
+      description: 'Supplementary video content'
+    }
   ]
 });
 
@@ -176,6 +224,7 @@ const CourseContent = () => {
   const [loading, setLoading] = useState(true);
   const [currentLesson, setCurrentLesson] = useState(1);
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
+  const [expandedModules, setExpandedModules] = useState<number[]>([1]);
 
   useEffect(() => {
     if (!courseId || !user) return;
@@ -257,6 +306,14 @@ const CourseContent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleModule = (moduleId: number) => {
+    setExpandedModules(prev => 
+      prev.includes(moduleId) 
+        ? prev.filter(id => id !== moduleId)
+        : [...prev, moduleId]
+    );
   };
 
   const markLessonComplete = (lessonId: number) => {
@@ -385,9 +442,7 @@ const CourseContent = () => {
           </Button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold">{course.title}</h1>
-            <p className="text-muted-foreground">
-              Learning Progress: {enrollment?.progress_percentage || 0}%
-            </p>
+            <p className="text-muted-foreground mt-2">{course.description}</p>
           </div>
           <Button asChild variant="outline" className="gap-2">
             <Link to="/chat">
@@ -511,40 +566,87 @@ const CourseContent = () => {
               </CardContent>
             </Card>
 
-            {/* Course Content Navigation */}
+            {/* Curriculum Navigation */}
             <Card>
               <CardHeader>
-                <CardTitle>Course Content</CardTitle>
+                <CardTitle>Curriculum</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-2">
                 {courseContent.modules.map((module) => (
-                  <div key={module.id} className="space-y-2">
-                    <h4 className="font-medium text-sm">{module.title}</h4>
-                    <div className="space-y-1">
+                  <Collapsible 
+                    key={module.id}
+                    open={expandedModules.includes(module.id)}
+                    onOpenChange={() => toggleModule(module.id)}
+                  >
+                    <CollapsibleTrigger className="w-full flex items-center justify-between p-3 hover:bg-muted rounded-lg text-left">
+                      <span className="font-medium">{module.title}</span>
+                      {expandedModules.includes(module.id) ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-1 mt-2">
                       {module.lessons.map((lesson) => (
                         <button
                           key={lesson.id}
                           onClick={() => setCurrentLesson(lesson.id)}
-                          className={`w-full text-left p-2 rounded text-sm flex items-center justify-between transition-colors ${
+                          className={`w-full text-left p-3 ml-4 rounded-lg text-sm flex items-center justify-between transition-colors ${
                             currentLesson === lesson.id
                               ? 'bg-primary text-primary-foreground'
                               : 'hover:bg-muted'
                           }`}
                         >
-                          <span className="flex items-center gap-2">
+                          <div className="flex items-center gap-3">
                             {lesson.type === 'video' ? (
-                              <Play className="h-3 w-3" />
+                              <Play className="h-4 w-4" />
                             ) : (
-                              <FileText className="h-3 w-3" />
+                              <FileText className="h-4 w-4" />
                             )}
-                            {lesson.title}
-                          </span>
+                            <div>
+                              <div className="font-medium">{lesson.title}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {lesson.type} • {lesson.duration} min
+                              </div>
+                            </div>
+                          </div>
                           {completedLessons.includes(lesson.id) && (
-                            <CheckCircle className="h-3 w-3 text-green-600" />
+                            <CheckCircle className="h-4 w-4 text-green-600" />
                           )}
                         </button>
                       ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Resources */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Resources</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {courseContent.resources.map((resource) => (
+                  <div key={resource.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      {resource.type === 'PDF' && <FileIcon className="h-4 w-4 text-red-600" />}
+                      {resource.type === 'Document' && <FileText className="h-4 w-4 text-blue-600" />}
+                      {resource.type === 'Link' && <ExternalLink className="h-4 w-4 text-green-600" />}
+                      {resource.type === 'Video' && <Play className="h-4 w-4 text-purple-600" />}
+                      <div>
+                        <div className="font-medium text-sm">{resource.title}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {resource.type} {resource.size && `• ${resource.size}`}
+                        </div>
+                        {resource.description && (
+                          <div className="text-xs text-muted-foreground mt-1">{resource.description}</div>
+                        )}
+                      </div>
                     </div>
+                    <Button size="sm" variant="ghost">
+                      <Download className="h-4 w-4" />
+                    </Button>
                   </div>
                 ))}
               </CardContent>
