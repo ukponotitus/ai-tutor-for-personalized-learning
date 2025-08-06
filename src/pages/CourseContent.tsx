@@ -318,17 +318,24 @@ const CourseContent = () => {
 
   const markLessonComplete = (lessonId: number) => {
     if (!completedLessons.includes(lessonId)) {
-      setCompletedLessons(prev => [...prev, lessonId]);
-      updateProgress();
+      const newCompletedLessons = [...completedLessons, lessonId];
+      setCompletedLessons(newCompletedLessons);
+      updateProgress(newCompletedLessons);
+      
+      toast({
+        title: "Lesson Completed!",
+        description: "Great job! Keep up the excellent work.",
+      });
     }
   };
 
-  const updateProgress = async () => {
+  const updateProgress = async (updatedCompletedLessons?: number[]) => {
     if (!enrollment || !course) return;
 
+    const lessonsToUse = updatedCompletedLessons || completedLessons;
     const courseContent = getCourseContent(course);
     const totalLessons = courseContent.modules.reduce((acc, module) => acc + module.lessons.length, 0);
-    const newProgress = Math.round((completedLessons.length / totalLessons) * 100);
+    const newProgress = Math.round((lessonsToUse.length / totalLessons) * 100);
 
     try {
       const { error } = await supabase
@@ -644,9 +651,22 @@ const CourseContent = () => {
                         )}
                       </div>
                     </div>
-                    <Button size="sm" variant="ghost">
-                      <Download className="h-4 w-4" />
-                    </Button>
+                     <Button 
+                       size="sm" 
+                       variant="ghost"
+                       onClick={() => {
+                         if (resource.url === '#') {
+                           toast({
+                             title: "Download",
+                             description: "This is a demo resource. In a real app, this would download the file.",
+                           });
+                         } else {
+                           window.open(resource.url, '_blank');
+                         }
+                       }}
+                     >
+                       <Download className="h-4 w-4" />
+                     </Button>
                   </div>
                 ))}
               </CardContent>

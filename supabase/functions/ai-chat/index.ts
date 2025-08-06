@@ -14,11 +14,16 @@ serve(async (req) => {
 
   try {
     const { message } = await req.json();
+    
+    console.log('Received message:', message);
 
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
+      console.error('OPENAI_API_KEY is not configured');
       throw new Error('OPENAI_API_KEY is not configured');
     }
+    
+    console.log('OpenAI API key found, making request...');
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -55,7 +60,10 @@ serve(async (req) => {
     }
 
     const data = await response.json();
+    console.log('OpenAI response:', data);
+    
     const aiResponse = data.choices[0].message.content;
+    console.log('AI response content:', aiResponse);
 
     return new Response(JSON.stringify({ response: aiResponse }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
