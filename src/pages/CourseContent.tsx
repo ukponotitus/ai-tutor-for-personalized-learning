@@ -520,10 +520,15 @@ const CourseContent = () => {
                     Duration: {currentLessonData?.duration} minutes
                   </div>
                   <div className="flex gap-2">
-                    {!completedLessons.includes(currentLesson) && (
+                    {!completedLessons.includes(currentLesson) ? (
                       <Button onClick={() => markLessonComplete(currentLesson)}>
                         <CheckCircle className="h-4 w-4 mr-2" />
                         Mark Complete
+                      </Button>
+                    ) : (
+                      <Button disabled variant="secondary">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Completed
                       </Button>
                     )}
                     <Button asChild variant="outline" className="gap-2">

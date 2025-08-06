@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send, MessageSquare, Plus } from 'lucide-react';
+import { Send, MessageSquare, Plus, Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -128,6 +128,44 @@ const Chat = () => {
     }
   };
 
+  const deleteSession = async (sessionId: string) => {
+    try {
+      // Delete messages first
+      const { error: messagesError } = await supabase
+        .from('chat_messages')
+        .delete()
+        .eq('session_id', sessionId);
+
+      if (messagesError) throw messagesError;
+
+      // Delete session
+      const { error: sessionError } = await supabase
+        .from('chat_sessions')
+        .delete()
+        .eq('id', sessionId);
+
+      if (sessionError) throw sessionError;
+
+      setSessions(prev => prev.filter(s => s.id !== sessionId));
+      
+      if (currentSession === sessionId) {
+        setCurrentSession(null);
+        setMessages([]);
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Chat session deleted successfully',
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete chat session',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const sendMessage = async () => {
     if (!newMessage.trim() || !currentSession || loading) return;
 
@@ -234,18 +272,33 @@ const Chat = () => {
                   ) : (
                     <div className="space-y-2 p-4">
                       {sessions.map((session) => (
-                        <button
+                        <div
                           key={session.id}
-                          onClick={() => setCurrentSession(session.id)}
-                          className={`w-full text-left p-3 rounded-lg transition-colors ${
+                          className={`flex items-center gap-2 p-3 rounded-lg transition-colors ${
                             currentSession === session.id
                               ? 'bg-primary text-primary-foreground'
                               : 'hover:bg-accent'
                           }`}
                         >
-                          <div className="font-medium truncate">{session.title}</div>
-                          <div className="text-sm opacity-70 truncate">{session.subject}</div>
-                        </button>
+                          <button
+                            onClick={() => setCurrentSession(session.id)}
+                            className="flex-1 text-left"
+                          >
+                            <div className="font-medium truncate">{session.title}</div>
+                            <div className="text-sm opacity-70 truncate">{session.subject}</div>
+                          </button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 opacity-70 hover:opacity-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteSession(session.id);
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       ))}
                     </div>
                   )}
