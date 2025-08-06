@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { 
   GraduationCap, 
   Home, 
@@ -155,6 +156,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               <span className="text-sm text-muted-foreground hidden sm:inline">
                 {user?.email}
               </span>
+              <ThemeToggle />
               <Button
                 variant="ghost"
                 size="icon"

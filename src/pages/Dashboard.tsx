@@ -32,7 +32,7 @@ interface Course {
   thumbnail_url?: string;
 }
 
-interface Enrollment {
+interface Progress {
   id: string;
   progress_percentage: number;
   course: Course;
@@ -49,7 +49,7 @@ interface Quiz {
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [progressData, setProgressData] = useState<Progress[]>([]);
   const [featuredCourses, setFeaturedCourses] = useState<Course[]>([]);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,8 +57,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        // Fetch user enrollments
-        const { data: enrollmentData } = await supabase
+        // Fetch user course progress 
+        const { data: progressData } = await supabase
           .from('course_enrollments')
           .select(`
             id,
@@ -85,7 +85,7 @@ const Dashboard = () => {
           .select('*')
           .limit(3);
 
-        setEnrollments(enrollmentData || []);
+        setProgressData(progressData || []);
         setFeaturedCourses(coursesData || []);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -118,15 +118,15 @@ const Dashboard = () => {
 
   const stats = [
     {
-      title: 'Courses Enrolled',
-      value: enrollments.length,
+      title: 'Courses Started',
+      value: progressData.length,
       icon: BookOpen,
       description: 'Active learning paths',
     },
     {
       title: 'Average Progress',
-      value: enrollments.length > 0 
-        ? Math.round(enrollments.reduce((acc, e) => acc + e.progress_percentage, 0) / enrollments.length)
+      value: progressData.length > 0 
+        ? Math.round(progressData.reduce((acc, e) => acc + e.progress_percentage, 0) / progressData.length)
         : 0,
       icon: TrendingUp,
       description: 'Completion rate',
@@ -219,11 +219,11 @@ const Dashboard = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {enrollments.length > 0 ? (
-              enrollments.map((enrollment) => {
-                const course = enrollment.course as Course;
+            {progressData.length > 0 ? (
+              progressData.map((progress) => {
+                const course = progress.course as Course;
                 return (
-                  <div key={enrollment.id} className="space-y-3 p-4 border rounded-lg">
+                  <div key={progress.id} className="space-y-3 p-4 border rounded-lg">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
                         <h4 className="font-medium">{course.title}</h4>
@@ -238,9 +238,9 @@ const Dashboard = () => {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Progress</span>
-                        <span>{enrollment.progress_percentage}%</span>
+                        <span>{progress.progress_percentage}%</span>
                       </div>
-                      <Progress value={enrollment.progress_percentage} />
+                      <Progress value={progress.progress_percentage} />
                     </div>
                     <Button asChild size="sm" className="w-full">
                       <Link to={`/courses/${course.id}`}>Continue</Link>
@@ -252,7 +252,7 @@ const Dashboard = () => {
               <div className="text-center py-8">
                 <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <p className="text-muted-foreground mb-4">
-                  No courses enrolled yet
+                  No courses started yet
                 </p>
                 <Button asChild>
                   <Link to="/courses">Browse Courses</Link>

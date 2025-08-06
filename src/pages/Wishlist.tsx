@@ -84,7 +84,7 @@ const Wishlist = () => {
     }
   };
 
-  const enrollInCourse = async (courseId: string, courseTitle: string) => {
+  const startLearning = async (courseId: string, courseTitle: string) => {
     try {
       const { error } = await supabase
         .from('course_enrollments')
@@ -96,13 +96,13 @@ const Wishlist = () => {
       if (error) throw error;
 
       toast({
-        title: 'Enrolled successfully',
-        description: `You have been enrolled in "${courseTitle}"`,
+        title: 'Started learning',
+        description: `You can now access "${courseTitle}"`,
       });
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to enroll in course',
+        description: 'Failed to start learning',
         variant: 'destructive',
       });
     }
@@ -127,7 +127,7 @@ const Wishlist = () => {
             My Wishlist
           </h1>
           <p className="text-muted-foreground">
-            Keep track of courses you're interested in and enroll when you're ready
+            Keep track of courses you're interested in and start learning when ready
           </p>
         </div>
 
@@ -201,9 +201,9 @@ const Wishlist = () => {
                     {item.courses.is_free ? 'Free' : `$${item.courses.price}`}
                   </div>
                   <Button 
-                    onClick={() => enrollInCourse(item.courses.id, item.courses.title)}
+                    onClick={() => startLearning(item.courses.id, item.courses.title)}
                   >
-                    Enroll Now
+                    Start Learning
                   </Button>
                 </CardFooter>
               </Card>
