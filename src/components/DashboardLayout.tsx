@@ -115,36 +115,38 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex">
-        {/* Desktop Sidebar */}
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Desktop Layout */}
+      <div className="flex flex-1">
+        {/* Desktop Sidebar - Hidden on mobile */}
         <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-          <div className="flex flex-col flex-grow border-r bg-background">
+          <div className="flex flex-col flex-1 border-r bg-background overflow-y-auto">
             <SidebarContent />
           </div>
         </div>
 
         {/* Mobile Sidebar */}
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-          <SheetContent side="left" className="p-0 w-64">
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
-
-        {/* Main Content */}
-        <div className="flex flex-col flex-1 md:pl-64">
-          {/* Top Navigation Bar */}
-          <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 lg:px-6">
+          <SheetTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              className="md:hidden"
+              className="md:hidden fixed top-4 left-4 z-50"
               onClick={() => setIsMobileMenuOpen(true)}
             >
               <Menu className="h-4 w-4" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            <SidebarContent />
+          </SheetContent>
+        </Sheet>
 
+        {/* Main Content Area */}
+        <div className="flex-1 md:ml-64">
+          {/* Top Navigation Bar */}
+          <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 lg:px-6">
             <div className="flex-1">
               <h1 className="text-lg font-semibold">
                 {navigationItems.find(item => item.href === location.pathname)?.label || 'Dashboard'}
@@ -177,7 +179,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </header>
 
           {/* Page Content */}
-          <main className="flex-1 p-4 lg:p-6">
+          <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
             {children}
           </main>
         </div>

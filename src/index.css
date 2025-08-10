@@ -41,6 +41,9 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 262.1 83.3% 57.8%;
+    --sidebar: 210 40% 96.1%;
+  --sidebar-accent: 210 40% 90%;
+  --sidebar-accent-foreground: 222.2 47.4% 11.2%;
   }
 
   .dark {
@@ -76,6 +79,9 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 210 20% 98%;
     --sidebar-border: 215 27.9% 16.9%;
     --sidebar-ring: 263.4 70% 50.4%;
+     --sidebar: 217.2 32.6% 17.5%;
+    --sidebar-accent: 217.2 32.6% 25%;
+    --sidebar-accent-foreground: 210 40% 98%;
   }
 }
 
@@ -87,4 +93,39 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Ensure proper height calculations */
+.h-full {
+  height: 100%;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+
+/* Avatar fallback colors */
+.bg-primary {
+  background-color: hsl(var(--primary));
+}
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+.bg-card {
+  background-color: hsl(var(--card));
+}
+.text-card-foreground {
+  color: hsl(var(--card-foreground));
+}
+
+/* Animation for loading dots */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

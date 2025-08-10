@@ -54,7 +54,7 @@ interface Resource {
   type: 'PDF' | 'Link' | 'Document' | 'Video';
   url: string;
   size?: string;
-  description?: string;
+  description?: string; 
 }
 
 // Mock course content structure
@@ -541,42 +541,6 @@ const CourseContent = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Course Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Course Info</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm font-medium">Instructor</p>
-                    <p className="text-sm text-muted-foreground">
-                      {course.instructor_name || "Not specified"}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm font-medium">Duration</p>
-                    <p className="text-sm text-muted-foreground">
-                      {course.duration_hours ? `${course.duration_hours} hours` : "Not specified"}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">{course.category}</Badge>
-                  <Badge variant="outline">{course.difficulty_level}</Badge>
-                </div>
-              </CardContent>
-            </Card>
 
             {/* Curriculum Navigation */}
             <Card>
@@ -630,6 +594,42 @@ const CourseContent = () => {
                     </CollapsibleContent>
                   </Collapsible>
                 ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Course Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Course Info</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">Instructor</p>
+                    <p className="text-sm text-muted-foreground">
+                      {course.instructor_name || "Not specified"}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium">Duration</p>
+                    <p className="text-sm text-muted-foreground">
+                      {course.duration_hours ? `${course.duration_hours} hours` : "Not specified"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">{course.category}</Badge>
+                  <Badge variant="outline">{course.difficulty_level}</Badge>
+                </div>
               </CardContent>
             </Card>
 
