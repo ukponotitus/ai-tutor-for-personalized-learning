@@ -260,9 +260,6 @@ const Courses = () => {
                   {course.difficulty_level && (
                     <Badge variant="outline">{course.difficulty_level}</Badge>
                   )}
-                  {course.is_free && (
-                    <Badge variant="default">Free</Badge>
-                  )}
                 </div>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   {course.instructor_name && (
@@ -279,10 +276,7 @@ const Courses = () => {
                   )}
                 </div>
               </CardContent>
-              <CardFooter className="flex justify-between items-center">
-                <div className="text-lg font-semibold">
-                  {course.is_free ? 'Free' : `$${course.price}`}
-                </div>
+              <CardFooter className="flex justify-end items-center">
                 <Button asChild>
                   <Link to={`/courses/${course.id}`}>Start Learning</Link>
                 </Button>

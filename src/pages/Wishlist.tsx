@@ -183,9 +183,6 @@ const Wishlist = () => {
                     {item.courses.difficulty_level && (
                       <Badge variant="outline">{item.courses.difficulty_level}</Badge>
                     )}
-                    {item.courses.is_free && (
-                      <Badge variant="default">Free</Badge>
-                    )}
                   </div>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
                     {item.courses.instructor_name && (
@@ -205,10 +202,7 @@ const Wishlist = () => {
                     Added to wishlist on {new Date(item.created_at).toLocaleDateString()}
                   </div>
                 </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                  <div className="text-lg font-semibold">
-                    {item.courses.is_free ? 'Free' : `$${item.courses.price}`}
-                  </div>
+                <CardFooter className="flex justify-end items-center">
                   <Button 
                     onClick={() => startLearning(item.courses.id, item.courses.title)}
                   >
