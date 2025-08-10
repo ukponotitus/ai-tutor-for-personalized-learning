@@ -86,19 +86,28 @@ const Wishlist = () => {
 
   const startLearning = async (courseId: string, courseTitle: string) => {
     try {
-      const { error } = await supabase
+      // Check if already enrolled
+      const { data: existingEnrollment } = await supabase
         .from('course_enrollments')
-        .insert({
-          user_id: user?.id,
-          course_id: courseId,
-        });
+        .select('id')
+        .eq('user_id', user?.id)
+        .eq('course_id', courseId)
+        .maybeSingle();
 
-      if (error) throw error;
+      // If not enrolled, enroll them
+      if (!existingEnrollment) {
+        const { error } = await supabase
+          .from('course_enrollments')
+          .insert({
+            user_id: user?.id,
+            course_id: courseId,
+          });
 
-      toast({
-        title: 'Started learning',
-        description: `You can now access "${courseTitle}"`,
-      });
+        if (error) throw error;
+      }
+
+      // Navigate to course content
+      window.location.href = `/courses/${courseId}`;
     } catch (error) {
       toast({
         title: 'Error',
