@@ -277,7 +277,7 @@ const Courses = () => {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end items-center">
-                <Button asChild>
+                <Button asChild className="w-full">
                   <Link to={`/courses/${course.id}`}>Start Learning</Link>
                 </Button>
               </CardFooter>
