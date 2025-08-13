@@ -57,6 +57,13 @@ interface Resource {
   description?: string; 
 }
 
+// Helper function to extract YouTube ID
+function getYouTubeId(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
 // Mock course content structure
 const getCourseContent = (course: Course) => ({
   modules: [
@@ -89,7 +96,7 @@ This course is designed to be completed over ${course.duration_hours} hours, wit
           id: 2,
           title: "Getting Started",
           type: "video",
-          content: "https://www.example.com/video-placeholder",
+          content: "https://www.youtube.com/watch?v=mKBbP4T5fbk&pp=ygUfY29tbXVuaWNhdGlvbiBpbiBlbmdsaXNoIGNvdXJzZQ%3D%3D",
           duration: 20
         }
       ]
@@ -567,12 +574,17 @@ const CourseContent = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 {currentLessonData?.type === 'video' ? (
-                  <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <Play className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                      <p className="text-muted-foreground">Video Player Placeholder</p>
-                      <p className="text-sm text-muted-foreground">Duration: {currentLessonData.duration} minutes</p>
-                    </div>
+                  <div className="aspect-video bg-black rounded-lg overflow-hidden">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={`https://www.youtube.com/embed/${getYouTubeId(currentLessonData.content)}`}
+                      title={currentLessonData.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    ></iframe>
                   </div>
                 ) : (
                   <div className="prose max-w-none">
